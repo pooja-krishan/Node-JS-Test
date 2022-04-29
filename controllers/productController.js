@@ -10,7 +10,7 @@ const addProduct = async(req, res) => {
     const {error} = schema.schema(req.body)
     // res.send(validation);
     if(error) {
-    res.send({"message":error.message});
+        res.send({"error" : error.message});
         return;
     }
     let info = {
@@ -32,14 +32,21 @@ const addProduct = async(req, res) => {
 
 const getProducts = async(req, res) => {
     try {
-    let products = await Product.findAll();
+        let products = await Product.findAll();
     // {
     //     attributes : [
     //         'title',     // Can be used to find and return particular attributes
     //         'price'
     //     ]
     // } );
-        res.status(200).send(products); 
+        if(products == null)
+        {
+            res.status(200).send({"error" : "No products found"}); 
+        }
+        else
+        {
+            res.status(200).send(products);
+        }
     }
     catch (err) 
     {
@@ -58,9 +65,8 @@ const getOneProduct = async(req, res) => {
                 id : id
             }
         });
-        console.log(product)
         if(product === null) {
-            res.status(200).send({error : "ID does not exist"});
+            res.status(200).send({"error" : "ID does not exist"});
         //    return res.status(204).send("ID does not exist");
         }
         else {
@@ -77,10 +83,15 @@ const getOneProduct = async(req, res) => {
 const updateProduct = async(req, res) => {
     try {
         let id = req.params.productid;
+        const {error} = schema.schema(req.body)
+        if(error) {
+            res.send({"error" : error.message});
+            return;
+        }
         const product = await Product.update(req.body, {
             where: {id : id}
         });
-        res.status(200).send('Product updated successfully');
+        res.status(200).send({"message" : "Product updated successfully"});
     }
     catch(err) {
         console.log(err);
@@ -99,13 +110,13 @@ const deleteProduct = async(req, res) => {
         })
         if(product == null)
         {
-            res.status(200).send("Product does not even exist to delete");
+            res.status(200).send({"error" : "Product does not even exist to delete"});
         }
         else {
             await Product.destroy( {
                 where : {id : id}
             });
-            res.status(200).send("Data successfully deleted");
+            res.status(200).send({"message" : "Data successfully deleted"});
         }
     }
     catch(err) {
@@ -120,8 +131,14 @@ const getPublishedProduct = async(req, res) => {
         const products = await Product.findAll({where : {
             published : true
         }});
-    
-        res.status(200).send(products);
+        if (products == null) 
+        {
+            res.status(200).send({"error" : "No products are published"});
+        }
+        else 
+        {
+            res.status(200).send(products);
+        }
     }
     catch(err) {
         console.log(err);
