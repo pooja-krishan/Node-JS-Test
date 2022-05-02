@@ -1,7 +1,9 @@
 const productController = require('../controllers/productController');
 
 const express = require('express');
-const router = express.Router();
+const product_router = express.Router();
+
+const user = require('../middlewares/authMiddleware');
 
 /**
  * @swagger
@@ -46,7 +48,7 @@ const router = express.Router();
  *       500:
  *         description: Internal Server Error
  */
-router.post('/add',productController.addProduct);
+product_router.post('/add',user.authenticateToken,productController.addProduct);
 
 /**
  * @swagger
@@ -70,7 +72,7 @@ router.post('/add',productController.addProduct);
  *       500:
  *         description: Internal Server Error
  */
-router.get('/all',productController.getProducts);
+product_router.get('/all',user.authenticateToken,productController.getProducts);
 
 /**
  * @swagger
@@ -99,7 +101,7 @@ router.get('/all',productController.getProducts);
  *         description: Internal Server Error
  */
 
-router.get('/getPublished',productController.getPublishedProduct);
+product_router.get('/getPublished',user.authenticateToken,productController.getPublishedProduct);
 
 /**
  * @swagger
@@ -127,7 +129,7 @@ router.get('/getPublished',productController.getPublishedProduct);
  *       500:
  *         description: Internal server error
  */
-router.get('/:productid',productController.getOneProduct);
+product_router.get('/:productid',user.authenticateToken,productController.getOneProduct);
 
 /**
  * @swagger
@@ -177,7 +179,7 @@ router.get('/:productid',productController.getOneProduct);
  *       500:
  *         description: Internal Server Error
  */
-router.put('/:productid',productController.updateProduct);
+product_router.put('/:productid',user.authenticateToken,productController.updateProduct);
 
 /**
  * @swagger
@@ -207,6 +209,6 @@ router.put('/:productid',productController.updateProduct);
  *       500:
  *         description: Internal Server Error
  */
-router.delete('/:productid',productController.deleteProduct);
+product_router.delete('/:productid',user.authenticateToken,productController.deleteProduct);
 
-module.exports = router;
+module.exports = product_router;

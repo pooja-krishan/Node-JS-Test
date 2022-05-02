@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+
+const jwt = require('jsonwebtoken');
+
 app.use(express.json());
 app.use(bodyParser.urlencoded( {extended:true} ))
 // const cors = require('cors');
@@ -12,8 +15,11 @@ var corsOptions = {
 }
 
 // Router
-const router = require('./routes/productRoute');
-app.use('/api/products',router);
+const product_router = require('./routes/productRoute');
+app.use('/api/products',product_router);
+
+const user_router = require('./routes/userRoute');
+app.use('/api/users',user_router);
 
 // Middlewares 
 // app.use(cors(corsOptions));

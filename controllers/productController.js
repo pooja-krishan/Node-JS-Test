@@ -5,9 +5,8 @@ const schema = require('../middlewares/validationMiddleware')
 const Product = db.products;
 
 // Add product
-
 const addProduct = async(req, res) => {
-    const {error} = schema.schema(req.body)
+    const {error} = schema.product_schema(req.body)
     // res.send(validation);
     if(error) {
         res.send({"error" : error.message});
@@ -83,7 +82,7 @@ const getOneProduct = async(req, res) => {
 const updateProduct = async(req, res) => {
     try {
         let id = req.params.productid;
-        const {error} = schema.schema(req.body)
+        const {error} = schema.product_schema(req.body)
         if(error) {
             res.send({"error" : error.message});
             return;
