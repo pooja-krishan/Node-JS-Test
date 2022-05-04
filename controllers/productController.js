@@ -1,4 +1,3 @@
-const { sequelize } = require('../model');
 const db = require('../model');
 const schema = require('../middlewares/validationMiddleware')
 
@@ -16,6 +15,7 @@ const addProduct = async(req, res) => {
         title : req.body.title,
         price : req.body.price,
         description : req.body.description,
+        count : req.body.count,
         published : req.body.published ? req.body.published : false
     }
     // const {result} = schema.validate(info)
@@ -23,6 +23,7 @@ const addProduct = async(req, res) => {
         res.status(200).send({"message":"Product added successfully"});
     })
     .catch((err) => {
+        console.log(err);
         res.send({"message ": "Duplicate entry :" + err.errors[0].message});
     });
 }

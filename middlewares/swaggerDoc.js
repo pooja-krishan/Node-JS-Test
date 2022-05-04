@@ -9,8 +9,20 @@ const swaggerDocs = (app) => {
                 version: "1.0.0",
                 description: "Node operations - CRUD - rest API document generated using swagger",
             },
-            
+            securityDefinitions: {
+                bearerAuth: {
+                    type: "apiKey",
+                    name: "authorization",
+                    in: "header",
+                },
+                appToken: {
+                    type: "apiKey",
+                    name: "appToken",
+                    in: "header",
+                },
+            }, 
         },
+        
         servers: [
             {
               url: 'http://localhost:8080',
@@ -21,7 +33,7 @@ const swaggerDocs = (app) => {
     };
     
     const swaggerDocsJs = swaggerJsDoc(swaggerOptions);
-    // console.log(swaggerDocsJs);
+    console.log(swaggerDocsJs);
     const swaggerUiOptions = {
         customSiteTitle: "Node CRUD Rest API",
     };

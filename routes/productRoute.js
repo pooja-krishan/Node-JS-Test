@@ -15,6 +15,8 @@ const user = require('../middlewares/authMiddleware');
  *     description: Add a product
  *     produces:
  *       - application/json
+ *     security:
+ *       - appToken: []
  *     parameters:
  *       - name: title
  *         description: name of the product
@@ -31,6 +33,11 @@ const user = require('../middlewares/authMiddleware');
  *         in: formData
  *         required: false
  *         type: string
+ *       - name: count
+ *         description: count of the products available
+ *         in: formData
+ *         required: true
+ *         type: number
  *       - name: published
  *         description: true if product has been published, else false
  *         in: formData
@@ -60,6 +67,8 @@ product_router.post('/add',user.authenticateToken,productController.addProduct);
  *     description: getsdetail of all products
  *     produces:
  *       - application/json
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Product fetched Successfully
@@ -88,6 +97,8 @@ product_router.get('/all',user.authenticateToken,productController.getProducts);
  *         description: contains a boolean value to specify if the product is published
  *         required: true
  *         type: boolean
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Product fetched Successfully
@@ -117,6 +128,8 @@ product_router.get('/getPublished',user.authenticateToken,productController.getP
  *         description: productid
  *         required: true
  *         type: integer
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Successfull
@@ -167,6 +180,8 @@ product_router.get('/:productid',user.authenticateToken,productController.getOne
  *         required: false
  *         in: formData
  *         type: boolean
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Successfully updated product
@@ -197,6 +212,8 @@ product_router.put('/:productid',user.authenticateToken,productController.update
  *         in: path
  *         required: true
  *         type: string
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Successfully deleted product

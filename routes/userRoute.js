@@ -27,6 +27,13 @@ const user_router = express.Router();
  *         description: email
  *         required: true
  *         type: string
+ *       - name: password
+ *         in: formData
+ *         description: password
+ *         required: true
+ *         type: string
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Successfull
@@ -55,6 +62,13 @@ const user_router = express.Router();
  *         description: email
  *         required: true
  *         type: string
+ *       - name: password
+ *         in: formData
+ *         description: password
+ *         required: true
+ *         type: string
+ *     security:
+ *       - appToken: []
  *     responses:
  *       200:
  *         description: Successfull

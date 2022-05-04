@@ -16,6 +16,15 @@ module.exports = (sequelize, Datatypes) => {
             required : true,
             unique : true,
             allowNull : false
+        },
+        password : {
+            type : Sequelize.STRING,
+            required : true,
+            allowNull : false
+        },
+        cart_count : {
+            type : Sequelize.STRING,
+            defaultValue : 0,
         }
     })
     return User;

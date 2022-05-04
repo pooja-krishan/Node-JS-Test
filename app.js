@@ -21,6 +21,9 @@ app.use('/api/products',product_router);
 const user_router = require('./routes/userRoute');
 app.use('/api/users',user_router);
 
+const cart_router = require('./routes/cartRoute');
+app.use('/api/cart',cart_router);
+
 // Middlewares 
 // app.use(cors(corsOptions));
 

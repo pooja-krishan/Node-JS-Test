@@ -7,9 +7,19 @@ module.exports = (sequelize,DataTypes) => {
         },
         price : {
             type : DataTypes.FLOAT,
+            // validate : {
+            //     isNumeric : true
+            // }
         },
         description : {
             type : DataTypes.TEXT
+        },
+        count : {
+            type : DataTypes.INTEGER,
+            allowNull : false,
+            validate : {
+                min : 0
+            }
         },
         published : {
             type : DataTypes.BOOLEAN
