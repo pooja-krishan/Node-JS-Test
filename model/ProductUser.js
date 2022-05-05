@@ -4,14 +4,14 @@ const ProductUser = sequelize.define('ProductUser', {
     ProductId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'users', // 'Movies' would also work
+        model: 'products',
         key: 'id'
       }
     },
     UserId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'products', // 'Actors' would also work
+        model: 'users', 
         key: 'id'
       }
     }

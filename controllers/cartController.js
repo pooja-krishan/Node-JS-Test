@@ -27,7 +27,7 @@ const addToCart = async (req, res) => {
         //     }
         // })
         res.status(200).send(`Item ${ req.body.productId } added to cart of user ${ req.body.userId }`)
-    }).catch(() => {
+    }).catch((err) => {
         console.log(err);
         res.send({"message ": err});
     });
@@ -37,36 +37,9 @@ const viewCart = async (req, res) => {
     console.log(req);
     let userId = req.params.userId;
     console.log('userid',userId);
-    // const product_user = await Cart.findOne({
-    //     where : {
-    //         userId : userId
-    //     }
-    // })
-    // const productId = product_user.productId;
-    // console.log(productId);
-    // const carts = await Cart.findOne({
-    //     include : [ {
-    //         model : 'products'
-    //     } ],
-    //     where : {
-    //         productId : productId
-    //     }
-    // }).then(() => {
-    //     if(carts == null)
-    //     {
-    //         return res.status(200).send("No products added to cart");
-    //     }
-    //     res.status(200).send(carts)
-    // }).catch((err) => {
-    //     console.log(err);
-    //     res.send({"message ": err});
-    // });
     try 
     {
-        // const user = await User.findByPk(1);
-        // console.log(user);
-        // const products = await user.getProducts();
-        const cart_mapping = await Cart.findOne({
+        const cart_mapping = await Cart.findAll({
             where : {
                 UserId : userId
             }
@@ -76,13 +49,25 @@ const viewCart = async (req, res) => {
         {
             return res.status(200).send({"message" : "Cart is empty"});
         }
-        const productId = cart_mapping.dataValues.ProductId;
+        const productId = [];
+        for(let i = 0; i < cart_mapping.length; i++) {
+            productId.push(cart_mapping[i].dataValues.ProductId);
+        }
         console.log(productId);
-        const products = await Product.findOne({
-            where : {
-                id : productId
-            }
-        })
+        let i = 0;
+        const products = []
+        while(i<productId.length)
+        {
+            products.push(await Product.findOne({
+                where : {
+                    id : productId[i]
+                },
+                attributes : {
+                    exclude : ['createdAt','updatedAt']
+                }
+            }));
+            i+=1;
+        }
         console.log(products);
         res.status(200).send(products);
     }
