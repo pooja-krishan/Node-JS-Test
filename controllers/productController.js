@@ -39,7 +39,7 @@ const getProducts = async(req, res) => {
     //         'price'
     //     ]
     // } );
-        if(products == null)
+        if(products.length === 0)
         {
             res.status(200).send({"error" : "No products found"}); 
         }
@@ -65,7 +65,7 @@ const getOneProduct = async(req, res) => {
                 id : id
             }
         });
-        if(product === null) {
+        if(!product) {
             res.status(200).send({"error" : "ID does not exist"});
         //    return res.status(204).send("ID does not exist");
         }
@@ -88,7 +88,16 @@ const updateProduct = async(req, res) => {
             res.send({"error" : error.message});
             return;
         }
-        const product = await Product.update(req.body, {
+        const product = await Product.findOne({
+            where : {
+                id : id
+            }
+        })
+        if(product == null)
+        {
+            return res.status(200).send({"error" : "Product does not even exist to delete"});
+        }
+        const updateProduct = await Product.update(req.body, {
             where: {id : id}
         });
         res.status(200).send({"message" : "Product updated successfully"});

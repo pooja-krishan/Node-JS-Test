@@ -14,6 +14,17 @@ const ProductUser = sequelize.define('ProductUser', {
         model: 'users', 
         key: 'id'
       }
+    },
+    qty : {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      validate : {
+        min : 0
+      }
+    },
+    isActive : {
+      type : DataTypes.BOOLEAN,
+      defaultValue : true
     }
   });
   return ProductUser;

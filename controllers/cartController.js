@@ -3,13 +3,14 @@ const schema = require('../middlewares/validationMiddleware');
 const { products, users } = require('../model/index');
 const Cart = db.cart;
 const Product = db.products;
-const User = db.users;
 
 const addToCart = async (req, res) => {
     let values = {
         ProductId : req.body.productId,
-        UserId : req.body.userId
+        UserId : req.body.userId,
+        qty : 1
     }
+    console.log(values);
     const product = await Product.findOne({
             where : {
             id : req.body.productId
@@ -19,7 +20,7 @@ const addToCart = async (req, res) => {
     {
         return res.status(200).send({"message" : "Product does not exist"});
     }
-    console.log(product.count-1);
+    // console.log(product.count-1);
     const cart = await Cart.create(values).then(() => {
         // const product_update = Product.update({ count : product.count-1 }, {
         //     where : {
@@ -45,7 +46,7 @@ const viewCart = async (req, res) => {
             }
         })
         console.log('cart mapping',cart_mapping);
-        if(!cart_mapping)
+        if((cart_mapping.length)===0)
         {
             return res.status(200).send({"message" : "Cart is empty"});
         }
@@ -54,7 +55,7 @@ const viewCart = async (req, res) => {
             productId.push(cart_mapping[i].dataValues.ProductId);
         }
         console.log(productId);
-        let i = 0;
+        var i = 0;
         const products = []
         while(i<productId.length)
         {
@@ -66,8 +67,17 @@ const viewCart = async (req, res) => {
                     exclude : ['createdAt','updatedAt']
                 }
             }));
+            products.push(await Cart.findOne({
+                where : {
+                    id : productId[i]
+                },
+                attributes : {
+                    include : ['qty'],
+                    exclude : [ 'UserId','createdAt','updatedAt']
+                }
+            }));
             i+=1;
-        }
+        }      
         console.log(products);
         res.status(200).send(products);
     }
@@ -78,7 +88,105 @@ const viewCart = async (req, res) => {
     }
 }
 
+const deleteFromCart = async (req, res) => {
+    let productId = req.params.productId;
+    let userId = req.params.userId;
+    console.log(productId)
+    try {
+        const product = await Cart.findOne({
+            where : {
+                ProductId : productId,
+                UserId : userId
+            }
+        })
+        if(!product)
+        {
+            return res.status(200).send({"message" : "Product does not exist in cart"});
+        }
+        await Cart.destroy({
+            where : {
+                ProductId : productId,
+                UserId : userId
+            }
+        })
+        res.status(200).send({"message" : "Product successfully deleted from cart"});
+    }
+    catch(err) {
+        res.send({"error" : err});
+    }
+}
+
+const addQty = async (req, res) => {
+    let productId = req.params.productId;
+    let userId = req.params.userId;
+    try {
+        const cart = await Cart.findOne({
+            where : {
+                ProductId : productId,
+                UserId : userId
+            }
+        })
+        console.log(cart);
+        if(!cart)
+        {
+            return res.status(200).send({"error" : "Product does not even exist in the cart"});
+        }
+        const quantity= cart.dataValues.qty;
+        const cart_item = await Cart.update({
+            qty : quantity+1
+        },{
+            where : {
+                ProductId : productId,
+                UserId : userId
+            }
+        });
+        if(cart_item)
+        {
+            res.status(200).send({"message" : "Item count increased"});
+        }
+    }   
+    catch(err) {
+        res.send({"error" : err});
+    }
+}
+
+const delQty = async (req, res) => {
+    let productId = req.params.productId;
+    let userId = req.params.userId;
+    try {
+        const cart = await Cart.findOne({
+            where : {
+                ProductId : productId,
+                UserId : userId
+            }
+        })
+        if(!cart)
+        {
+            return res.status(200).send({"error" : "Product does not even exist in the cart"});
+        }        
+        const quantity = cart.dataValues.qty;
+        const cart_item = Cart.update({
+            qty : quantity-1
+        },{
+            where : {
+                ProductId : productId,
+                UserId : userId
+            }
+        });
+        if(cart_item)
+        {
+            res.status(200).send({"message" : "Item count decreased"});
+        }
+    }
+    catch(err) {
+        res.send({"error" : err});
+    }
+}
+
 module.exports = {
     addToCart,
-    viewCart
+    viewCart,
+    deleteFromCart,
+    addQty,
+    delQty
 }
