@@ -23,6 +23,8 @@ const addUser = async(req, res) => {
     let info = {
         first_name : req.body.first_name,
         last_name : req.body.last_name,
+        phone_number : req.body.phone_number,
+        address : req.body.address,
         email : req.body.email,
         password : passwordHash
     }

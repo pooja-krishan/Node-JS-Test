@@ -11,6 +11,18 @@ module.exports = (sequelize, Datatypes) => {
             required : true,
             allowNull : false
         },
+        phone_number : {
+            type : Sequelize.STRING,
+            required : true,
+            unique : true,
+            allowNull : false
+        },
+        address : {
+            type : Sequelize.STRING,
+            required : true,
+            unique : true,
+            allowNull : false
+        },
         email : {
             type : Sequelize.STRING,
             required : true,
@@ -21,10 +33,6 @@ module.exports = (sequelize, Datatypes) => {
             type : Sequelize.STRING,
             required : true,
             allowNull : false
-        },
-        cart_count : {
-            type : Sequelize.STRING,
-            defaultValue : 0,
         }
     })
     return User;

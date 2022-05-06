@@ -22,6 +22,16 @@ const user_router = express.Router();
  *         description: last_name
  *         required: true
  *         type: string
+ *       - name: phone_number
+ *         in: formData
+ *         description: phone_number
+ *         required: true
+ *         type: string
+ *       - name: address
+ *         in: formData
+ *         description: address
+ *         required: true
+ *         type: string
  *       - name: email
  *         in: formData
  *         description: email

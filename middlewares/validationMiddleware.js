@@ -15,6 +15,8 @@ const user_schema = (data) => {
     let validation = Joi.object(
         { first_name: Joi.string() .min(3) .required(),
         last_name: Joi.string() .min(3) .required(),
+        phone_number: Joi.string() .length(10),
+        address: Joi.string() .max(40),
         email: Joi.string() .email(),
         password : joiPassword.string().min(10)
         .minOfSpecialCharacters(1)

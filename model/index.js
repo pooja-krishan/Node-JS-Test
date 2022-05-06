@@ -31,11 +31,13 @@ db.sequelize = sequelize;
 db.products = require('./productModel.js')(sequelize,DataTypes);
 db.users = require('./userModel.js')(sequelize,DataTypes);
 db.cart = require('./ProductUser')(sequelize,DataTypes);
+db.orders = require('./orderModel')(sequelize,DataTypes);
+db.ordercart = require('./OrderCart')(sequelize,DataTypes);
 // Associations
 // db.products.belongsToMany(db.users, { through: db.cart });
 // db.users.belongsToMany(db.products, { through: db.cart });
 
-db.sequelize.sync( {force : false} )
+db.sequelize.sync( {force : true} )
 .then(() => {
     console.log("Sync is complete");
 });       //Does not drop tables while restarting nodemon
