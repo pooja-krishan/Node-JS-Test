@@ -7,6 +7,7 @@ const Orders = db.orders;
 const Cart = db.cart;
 const User = db.users;
 const Product = db.products;
+const amqp = require('amqplib/callback_api');
 
 const addOrders = async (req, res) => {
     let userId = req.params.userId;
@@ -20,6 +21,7 @@ const addOrders = async (req, res) => {
     var first_name = user.first_name;
     var last_name = user.last_name;
     var shipping_address = user.address;
+
     const order = await Orders.create({
         UserId : userId,
         first_name : first_name,
@@ -139,6 +141,35 @@ const addOrders = async (req, res) => {
                 UserId : userId
             }
         })
+        // Send the message to Consumer service using RabbitMQ
+        let QUEUE = 'orders_queue';
+        let message = {
+            UserId : userId,
+            first_name : first_name,
+            last_name : last_name,
+            shippingAddress : shipping_address,
+            amount_total : amount_total,
+            order_total : order_total,
+            orderActive : false
+        };
+        amqp.connect("amqp://localhost",(err,connection) => {
+            console.log(err,connection);
+            if(err) {
+                throw err;
+            }
+            connection.createChannel((err,channel) => {
+                console.log(err,channel);
+                if(err) {
+                    throw err;
+                }
+                channel.assertQueue(QUEUE,{
+                    durable : true
+                });
+                channel.sendToQueue(QUEUE,Buffer.from(JSON.stringify(message)),{persistent : true});
+                console.log(`Message sent to queue: ${QUEUE}`)
+            })
+        });
+        console.log(message);
         res.status(200).send(finalOrder);
     });
 }

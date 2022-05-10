@@ -37,7 +37,7 @@ db.ordercart = require('./OrderCart')(sequelize,DataTypes);
 // db.products.belongsToMany(db.users, { through: db.cart });
 // db.users.belongsToMany(db.products, { through: db.cart });
 
-db.sequelize.sync( {force : true} )
+db.sequelize.sync( {force : false} )
 .then(() => {
     console.log("Sync is complete");
 });       //Does not drop tables while restarting nodemon
