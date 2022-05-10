@@ -6,13 +6,13 @@ const jwt = require('jsonwebtoken');
 
 app.use(express.json());
 app.use(bodyParser.urlencoded( {extended:true} ))
-// const cors = require('cors');
-
- 
+const cors = require('cors');
 
 var corsOptions = {
     origin: "https://localhost:8081"
 }
+
+app.use(cors(corsOptions));
 
 // Router
 const product_router = require('./routes/productRoute');
